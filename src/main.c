@@ -14,16 +14,36 @@ typedef struct {
 } Rule;
 
 Rule rules[] = {
-    {".txt", "Documents"}, {".pdf", "Documents"},
-    {".jpg", "Images"},    {".docx", "Documents"},
-    {".png", "Images"},    {".gif", "Images"},
-    {".doc", "Documents"}, {".jpeg", "Images"},
-    {".mkv", "Videos"},    {".mp4", "Videos"},
-    {".mp3", "Music"},     {".zip", "Archives"},
-    {".tar", "Archives"},  {".gz", "Archives"},
-    {".epub", "Books"},    {".m4a", "Videos"},
-    {".wav", "Videos"},    {".yml", "Documents"},
+    // Archives
+    {".dmg", "Archives"},
+    {".gz", "Archives"},
+    {".tar", "Archives"},
+    {".zip", "Archives"},
+    // Books
+    {".epub", "Books"},
+    // Documents
+    {".csv", "Documents"},
+    {".doc", "Documents"},
+    {".docx", "Documents"},
     {".md", "Documents"},
+    {".pdf", "Documents"},
+    {".ppt", "Documents"},
+    {".pptx", "Documents"},
+    {".txt", "Documents"},
+    {".xls", "Documents"},
+    {".xlsx", "Documents"},
+    // Images
+    {".gif", "Images"},
+    {".jpeg", "Images"},
+    {".jpg", "Images"},
+    {".png", "Images"},
+    // Music
+    {".m4a", "Music"},
+    {".mp3", "Music"},
+    {".wav", "Music"},
+    // Videos
+    {".mkv", "Videos"},
+    {".mp4", "Videos"},
     {NULL, NULL} // Sentinel value
 };
 
@@ -146,7 +166,13 @@ int organize_directory(const char *target_dir) {
 }
 
 int main(int argc, char *argv[]) {
-  const char *target = (argc > 1) ? argv[1] : ".";
+  if (argc < 2) {
+    fprintf(stderr, "Usage: %s <directory>\n", argv[0]);
+    fprintf(stderr, "Example: %s ~/Downloads\n", argv[0]);
+    return EXIT_FAILURE;
+  }
+
+  const char *target = argv[1];
   printf("Organizing files in: %s\n", target);
 
   if (organize_directory(target) != 0) {
