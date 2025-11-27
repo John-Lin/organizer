@@ -124,7 +124,12 @@ int organize_directory(const char *target_dir) {
     }
 
     char full_path[MAX_PATH];
-    snprintf(full_path, MAX_PATH, "%s/%s", work_dir, entry->d_name);
+    int ret = snprintf(full_path, MAX_PATH, "%s/%s", work_dir, entry->d_name);
+    if (ret >= MAX_PATH) {
+      fprintf(stderr, "Path too long for file: %s\n", entry->d_name);
+      failed++;
+      continue;
+    }
 
     struct stat file_stat;
     if (stat(full_path, &file_stat) == -1 || S_ISDIR(file_stat.st_mode)) {
@@ -140,7 +145,12 @@ int organize_directory(const char *target_dir) {
     }
 
     char dest_folder[MAX_PATH];
-    snprintf(dest_folder, MAX_PATH, "%s/%s", work_dir, folder);
+    ret = snprintf(dest_folder, MAX_PATH, "%s/%s", work_dir, folder);
+    if (ret >= MAX_PATH) {
+      fprintf(stderr, "Destination folder path too long for: %s\n", entry->d_name);
+      failed++;
+      continue;
+    }
 
     if (create_dir(dest_folder) == -1) {
       fprintf(stderr, "Failed to create directory: %s\n", dest_folder);
@@ -149,7 +159,12 @@ int organize_directory(const char *target_dir) {
     }
 
     char dest_path[MAX_PATH];
-    snprintf(dest_path, MAX_PATH, "%s/%s", dest_folder, entry->d_name);
+    ret = snprintf(dest_path, MAX_PATH, "%s/%s", dest_folder, entry->d_name);
+    if (ret >= MAX_PATH) {
+      fprintf(stderr, "Destination path too long for: %s\n", entry->d_name);
+      failed++;
+      continue;
+    }
 
     if (move_file(full_path, dest_path) == 0) {
       printf("Moved: %s -> %s\n", entry->d_name, folder);
